@@ -3,7 +3,8 @@ import cors from 'cors'
 import routes from './routes/routes'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
-// import https from 'https'
+import https from 'https'
+import { readFileSync } from 'fs'
 
 const app = express()
 const PORT = process.env.API_PORT ? process.env.API_PORT : 8080
@@ -33,5 +34,13 @@ app.use(
 
 app.get('/ip', (req, res) => res.send(req.ip))
 
-// https.createServer({}, app).listen(PORT)
-app.listen(PORT, () => console.log(`API running on port ${PORT}`))
+console.log(`Starting https server on ${PORT}`)
+https
+    .createServer(
+        {
+            cert: readFileSync(`${__dirname}/../certs/fullchain.pem`),
+            key: readFileSync(`${__dirname}/../certs/privkey.pem`),
+        },
+        app,
+    )
+    .listen(PORT)
