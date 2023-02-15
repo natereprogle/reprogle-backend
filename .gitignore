@@ -1,3 +1,5 @@
 node_modules/
 dist/
 certs/
+.idea/**/*.xml
+.idea/shelf/
