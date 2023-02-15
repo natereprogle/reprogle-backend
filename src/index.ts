@@ -4,8 +4,7 @@ import cors from 'cors'
 import routes from './routes/routes'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
-import https from 'https'
-import { readFileSync } from 'fs'
+import http from 'http'
 
 // Set up the app and port variables
 const app = express()
@@ -38,13 +37,7 @@ app.use(
 )
 
 // Create the server variable, but don't start it yet
-const server = https.createServer(
-    {
-        cert: readFileSync(`${__dirname}/certs/fullchain.pem`),
-        key: readFileSync(`${__dirname}/certs/privkey.pem`),
-    },
-    app,
-)
+const server = http.createServer(app)
 
 //Handle graceful shutdowns
 process.on('SIGTERM', () => {
