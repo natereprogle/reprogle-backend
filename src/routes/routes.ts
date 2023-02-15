@@ -1,20 +1,28 @@
+// Imports
 import express from 'express'
 import sendMessageToDiscord from './discord-message'
 import verifyTurnstile from './verify-turnstile'
+
+// Configure express router
 const router = express.Router()
 
+// Set up routes
 router.post('/verify-turnstile', async (req, res) => {
     res.send(await verifyTurnstile(req))
 })
 
 router.post('/discord', async (req, res) => {
-    const contents = await sendMessageToDiscord(
+    const contents = sendMessageToDiscord(
         req.body.firstName,
         req.body.lastName,
         req.body.email,
         req.body.message,
     )
-    res.status(200).send(contents)
+    // Using a custom return type allows us to send different status codes and messages depending on the result of the sendMessageToDiscord function
+    res.status(contents.code).send(JSON.parse(contents.message))
+    if (contents.debug) {
+        console.warn(contents.debug)
+    }
 })
 
 router.get('/', (_, res) => {
@@ -24,4 +32,5 @@ router.get('/', (_, res) => {
     })
 })
 
+// Export the router
 export default router

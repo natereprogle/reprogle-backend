@@ -1,3 +1,4 @@
+// Imports
 import express from 'express'
 import cors from 'cors'
 import routes from './routes/routes'
@@ -6,9 +7,12 @@ import helmet from 'helmet'
 import https from 'https'
 import { readFileSync } from 'fs'
 
+// Set up the app and port variables
 const app = express()
-const PORT = process.env.API_PORT ? process.env.API_PORT : 8080
+const _PORT = process.env.API_PORT ? process.env.API_PORT : 8080
+const _HOST = process.env.API_HOST ? `${process.env.API_HOST}` : '0.0.0.0'
 
+// Set up the rate listener
 const limiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 100, // Allow a max of 100 requests within that hour window
@@ -18,13 +22,15 @@ const limiter = rateLimit({
         'Too many requests from this IP address, please try again in an hour',
 })
 
+// Change some app settings
 app.enable('trust proxy')
 app.disable('x-powered-by')
 
+// Request the app to use the following handlers
 app.use(
     cors({
         origin: 'https://reprogle.org',
-        methods: 'POST',
+        methods: 'POST, GET',
     }),
     express.json(),
     routes,
@@ -32,15 +38,33 @@ app.use(
     helmet(),
 )
 
-app.get('/ip', (req, res) => res.send(req.ip))
+// Create the server variable, but don't start it yet
+const server = https.createServer(
+    {
+        cert: readFileSync(`${__dirname}/../certs/fullchain.pem`),
+        key: readFileSync(`${__dirname}/../certs/privkey.pem`),
+    },
+    app,
+)
 
-console.log(`Starting https server on ${PORT}`)
-https
-    .createServer(
-        {
-            cert: readFileSync(`${__dirname}/../certs/fullchain.pem`),
-            key: readFileSync(`${__dirname}/../certs/privkey.pem`),
-        },
-        app,
-    )
-    .listen(PORT)
+//Handle graceful shutdowns
+process.on('SIGTERM', () => {
+    console.log('\nSIGTERM signal received: closing HTTPS server')
+    server.close(() => {
+        console.log('HTTPS server closed')
+    })
+})
+
+process.on('SIGINT', () => {
+    console.log('\nSIGINT signal received: closing HTTPS server')
+    server.close(() => {
+        console.log('HTTPS server closed')
+    })
+})
+
+// Start the server
+console.log(`Starting https server on ${_HOST}:${_PORT}`)
+server.listen({
+    host: _HOST,
+    port: _PORT,
+})
