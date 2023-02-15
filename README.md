@@ -9,12 +9,14 @@ The best way to handle this is to use a middleman or your own backend to handle 
 serves as the middleman for the site to hide secrets. The main reason I did this was to prevent abusing my Discord Webhook I use for
 my contact form since, prior to this, the webhook was available in plaintext in the client app.
 
+A `Dockerfile` and `docker-compose.example.yml` if you want to build from source yourself.
+
 ### Building and running
+I mean...I guess you can run this, but it's meant specifically for me haha. Have at it!
 1. Clone the repo and run `npm install`. This will install all dependencies. Don't need dev dependencies? Run `npm install --production`
 2. Create a `/certs` folder in the root directory and place your fullchain.pem and privkey.pem files in there. This will ensure the API is using SSL.
    * Without those files, it _will_ fail to start!
 3. Run `npm start`. Make sure the proper environment variables are set. Those are:
-   * `API_HOST`
-   * `API_PORT`
-   * `WEBHOOK`
-   * `TURNSTILE_SECRET`
+   * `API_HOST` (Defaults to 0.0.0.0 if not provided)
+   * `WEBHOOK` (Used for sending Discord to your Discord channel/server)
+   * `TURNSTILE_SECRET` (Used for verifying turnstile secrets)
