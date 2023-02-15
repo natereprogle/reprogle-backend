@@ -3,3 +3,4 @@ dist/
 certs/
 .idea/**/*.xml
 .idea/shelf/
+docker-compose.yml

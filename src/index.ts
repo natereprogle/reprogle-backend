@@ -9,7 +9,6 @@ import { readFileSync } from 'fs'
 
 // Set up the app and port variables
 const app = express()
-const _PORT = process.env.API_PORT ? process.env.API_PORT : 8080
 const _HOST = process.env.API_HOST ? `${process.env.API_HOST}` : '0.0.0.0'
 
 // Set up the rate listener
@@ -41,8 +40,8 @@ app.use(
 // Create the server variable, but don't start it yet
 const server = https.createServer(
     {
-        cert: readFileSync(`${__dirname}/../certs/fullchain.pem`),
-        key: readFileSync(`${__dirname}/../certs/privkey.pem`),
+        cert: readFileSync(`${__dirname}/certs/fullchain.pem`),
+        key: readFileSync(`${__dirname}/certs/privkey.pem`),
     },
     app,
 )
@@ -63,8 +62,8 @@ process.on('SIGINT', () => {
 })
 
 // Start the server
-console.log(`Starting https server on ${_HOST}:${_PORT}`)
+console.log(`Starting https server on ${_HOST}:8080`)
 server.listen({
     host: _HOST,
-    port: _PORT,
+    port: 8080,
 })
