@@ -1,4 +1,5 @@
-import { APIResponse } from '../types/types'
+import {APIResponse} from '../types/types'
+import getFormattedDate from '../util/getDate'
 
 const endpoint = process.env.WEBHOOK ? `${process.env.WEBHOOK}` : undefined
 
@@ -40,7 +41,7 @@ export default function sendMessageToDiscord(
             'Content-Type': 'application/json',
         },
     }).then(() =>
-        console.log('API responded to a request at /discord\n', {
+        console.log(getFormattedDate() + ' API responded to a request at /discord\n', {
             firstName,
             lastName,
             email,
