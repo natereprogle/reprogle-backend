@@ -22,7 +22,7 @@ export default async function verifyTurnstile(req: {
             'content-type': 'application/x-www-form-urlencoded',
         },
     }).then((result) => {
-        console.log(getFormattedDate() + ' The server responded to a request at /verify-turnstile')
+        console.log(getFormattedDate() + ' The server responded to a request at /verify-turnstile', result.json())
 
         if (secret === '1x0000000000000000000000000000000AA') {
             console.log(getFormattedDate() + ' This request will immediately response good due to the secret being set to a development secret!')
