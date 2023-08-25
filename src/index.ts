@@ -27,7 +27,7 @@ app.disable('x-powered-by')
 // Request the app to use the following handlers
 app.use(
     cors({
-        origin: 'https://reprogle.org',
+        origin: ['https://reprogle.org', 'https://www.reprogle.org'],
         methods: 'POST, GET',
     }),
     express.json(),
