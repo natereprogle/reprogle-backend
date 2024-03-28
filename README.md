@@ -1,3 +1,5 @@
+# THIS PROJECT IS NO LONGER UPDATED OR SUPPORTED. PLEASE DO NOT RELY ON IT.
+
 ## Reprogle.org Backend
 This project is meant to be a middleman for my [website](https://reprogle.org) ([source here](https://github.com/TerrrorByte/reprogle.org)).
 My site used to run on Next.js, which meant that it could use things like process.env. Now that it uses Angular it
